@@ -69,7 +69,6 @@ const Icon = ({ name, size=18, color="currentColor" }) => {
     mail:     <svg {...p}><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>,
     building: <svg {...p}><rect x="1" y="3" width="15" height="18"/><path d="M16 8h4l3 3v10h-7V8z"/><line x1="6" y1="8" x2="6" y2="8"/><line x1="10" y1="8" x2="10" y2="8"/><line x1="6" y1="12" x2="6" y2="12"/><line x1="10" y1="12" x2="10" y2="12"/><line x1="6" y1="16" x2="6" y2="16"/><line x1="10" y1="16" x2="10" y2="16"/></svg>,
     settings: <svg {...p}><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>,
-    cart:     <svg {...p}><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>,
     tag:      <svg {...p}><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>,
     chart:    <svg {...p}><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>,
   };
@@ -1225,10 +1224,9 @@ function ThemeBtn({dark,setDark}) {
   return <button className="theme-btn" onClick={()=>setDark(!dark)}><Icon name={dark?"sun":"moon"} size={14}/>{dark?"Light Mode":"Dark Mode"}</button>;
 }
 
-function EmployeeApp({emp,employees,setEmployees,onLogout,reloadAll,dark,setDark,onOpenPOS}) {
+function EmployeeApp({emp,employees,setEmployees,onLogout,reloadAll,dark,setDark}) {
   const [tab,setTab]=useState("home");
   const [showPwd,setShowPwd]=useState(false);
-  const [showPOS,setShowPOS]=useState(false);
   const cur=employees.find(e=>e.id===emp.id)||emp;
 
   // Employee's own tabs
@@ -1298,7 +1296,6 @@ function EmployeeApp({emp,employees,setEmployees,onLogout,reloadAll,dark,setDark
         <div className="topbar">
           <div className="topbar-title">{currentTabLabel}</div>
           {emp.manager&&<span className="badge b-violet">Manager</span>}
-          {emp.manager&&<button className="btn btn-success btn-sm" onClick={onOpenPOS}><Icon name="cart" size={13}/>POS Register</button>}
           <button className="btn btn-ghost btn-sm" onClick={()=>setShowPwd(true)}><Icon name="key" size={13}/>Password</button>
           <ThemeBtn dark={dark} setDark={setDark}/>
           <button className="btn btn-ghost btn-sm" onClick={onLogout}><Icon name="logout" size={13}/>Sign Out</button>
@@ -1309,7 +1306,7 @@ function EmployeeApp({emp,employees,setEmployees,onLogout,reloadAll,dark,setDark
   );
 }
 
-function AdminApp({employees,setEmployees,onLogout,reloadAll,officeLocation,setOfficeLocation,dark,setDark,onOpenPOS}) {
+function AdminApp({employees,setEmployees,onLogout,reloadAll,officeLocation,setOfficeLocation,dark,setDark}) {
   const [tab,setTab]=useState("dashboard");
   const [showOffice,setShowOffice]=useState(false);
 
@@ -1343,8 +1340,6 @@ function AdminApp({employees,setEmployees,onLogout,reloadAll,officeLocation,setO
           {adminTabs.map(t=><button key={t.id} className={`nav-item ${tab===t.id?"active":""}`} onClick={()=>setTab(t.id)}><Icon name={t.icon} size={15}/><span>{t.label}</span></button>)}
           <div className="nav-section">Configuration</div>
           <button className="nav-item" onClick={()=>setShowOffice(true)}><Icon name="mapPin" size={15}/><span>Office Location</span></button>
-          <div className="nav-section">Point of Sale</div>
-          <button className="nav-item" style={{color:"var(--green)"}} onClick={onOpenPOS}><Icon name="cart" size={15}/><span style={{color:"var(--green)"}}>Open POS Register</span></button>
           <button className="nav-item" onClick={()=>setTab("employees")}><Icon name="settings" size={15}/><span>Settings</span></button>
         </div>
         <div className="sidebar-bottom">
@@ -1376,7 +1371,7 @@ function PunchStation({employees,setEmployees,onBack,reloadAll,officeLocation}) 
   const [err,setErr]=useState("");
   const [punched,setPunched]=useState(null);
   const {pos,status,get}=useGPS();
-  useEffect(()=>{if(officeLocation)get();},[officeLocation]);
+  useEffect(()=>{if(officeLocation)get();},[officeLocation,get]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const inRange=()=>{if(!officeLocation)return true;if(!pos)return false;return distM(pos.lat,pos.lng,officeLocation.lat,officeLocation.lng)<=officeLocation.radius;};
 
@@ -1513,618 +1508,6 @@ function Login({employees,onLogin,onPunch,dark,setDark}) {
 }
 
 
-// ═══════════════════════════════════════════════════════════════════════════════
-// ─── POS MODULE ───────────────────────────────────────────────────────────────
-// ═══════════════════════════════════════════════════════════════════════════════
-
-const TAX_RATE = 0.08; // 8% sales tax — configurable
-
-const SAMPLE_PRODUCTS = [
-  { id:"P001", name:"Espresso",       category:"Coffee",    price:3.50,  cost:0.80,  stock:999, sku:"ESP001", active:true, emoji:"☕" },
-  { id:"P002", name:"Latte",          category:"Coffee",    price:5.50,  cost:1.20,  stock:999, sku:"LAT001", active:true, emoji:"🥛" },
-  { id:"P003", name:"Cappuccino",     category:"Coffee",    price:5.00,  cost:1.10,  stock:999, sku:"CAP001", active:true, emoji:"☕" },
-  { id:"P004", name:"Croissant",      category:"Bakery",    price:4.25,  cost:1.50,  stock:30,  sku:"CRO001", active:true, emoji:"🥐" },
-  { id:"P005", name:"Muffin",         category:"Bakery",    price:3.75,  cost:1.00,  stock:24,  sku:"MUF001", active:true, emoji:"🧁" },
-  { id:"P006", name:"Sandwich",       category:"Food",      price:8.50,  cost:3.00,  stock:15,  sku:"SAN001", active:true, emoji:"🥪" },
-  { id:"P007", name:"Orange Juice",   category:"Drinks",    price:4.00,  cost:1.20,  stock:40,  sku:"OJ001",  active:true, emoji:"🍊" },
-  { id:"P008", name:"Water Bottle",   category:"Drinks",    price:2.00,  cost:0.40,  stock:60,  sku:"WAT001", active:true, emoji:"💧" },
-  { id:"P009", name:"Chocolate Cake", category:"Bakery",    price:6.00,  cost:2.00,  stock:10,  sku:"CHK001", active:true, emoji:"🍰" },
-  { id:"P010", name:"Green Tea",      category:"Tea",       price:3.50,  cost:0.60,  stock:999, sku:"GT001",  active:true, emoji:"🍵" },
-  { id:"P011", name:"Iced Coffee",    category:"Coffee",    price:5.00,  cost:1.00,  stock:999, sku:"IC001",  active:true, emoji:"🧊" },
-  { id:"P012", name:"Bagel",          category:"Bakery",    price:3.00,  cost:0.80,  stock:20,  sku:"BAG001", active:true, emoji:"🥯" },
-];
-
-// ─── POS: REGISTER (main checkout screen) ─────────────────────────────────────
-function POSRegister({ products, setProducts, cashier, onSaleComplete }) {
-  const [cart, setCart] = useState([]);
-  const [search, setSearch] = useState("");
-  const [catFilter, setCatFilter] = useState("All");
-  const [discount, setDiscount] = useState(0);
-  const [payMode, setPayMode] = useState(null); // null | "cash" | "card"
-  const [cashGiven, setCashGiven] = useState("");
-  const [receipt, setReceipt] = useState(null);
-  const [note, setNote] = useState("");
-
-  const cats = ["All", ...new Set((products||[]).map(p => p.category))];
-  const active = (products||[]).filter(p => p.active &&
-    (catFilter === "All" || p.category === catFilter) &&
-    (p.name.toLowerCase().includes(search.toLowerCase()) || p.sku?.toLowerCase().includes(search.toLowerCase()))
-  );
-
-  const subtotal = cart.reduce((a, i) => a + i.price * i.qty, 0);
-  const discAmt  = subtotal * (Number(discount) / 100);
-  const taxable  = subtotal - discAmt;
-  const tax      = taxable * TAX_RATE;
-  const total    = taxable + tax;
-  const change   = Number(cashGiven || 0) - total;
-
-  const addToCart = (prod) => {
-    if (prod.stock !== 999 && prod.stock <= 0) return;
-    setCart(c => {
-      const ex = c.find(i => i.id === prod.id);
-      if (ex) return c.map(i => i.id === prod.id ? { ...i, qty: i.qty + 1 } : i);
-      return [...c, { ...prod, qty: 1 }];
-    });
-  };
-
-  const updateQty = (id, delta) => {
-    setCart(c => c.map(i => i.id === id ? { ...i, qty: Math.max(0, i.qty + delta) } : i).filter(i => i.qty > 0));
-  };
-
-  const removeItem = (id) => setCart(c => c.filter(i => i.id !== id));
-
-  const completeSale = async (method) => {
-    if (method === "cash" && Number(cashGiven) < total) return;
-    const sale = {
-      id: `S${Date.now()}`,
-      cashier_id: cashier?.id || null,
-      cashier_name: cashier?.name || "Admin",
-      items: cart.map(i => ({ id: i.id, name: i.name, qty: i.qty, price: i.price, category: i.category })),
-      subtotal, discount: discAmt, tax, total,
-      payment_method: method,
-      cash_given: method === "cash" ? Number(cashGiven) : null,
-      change_due: method === "cash" ? change : null,
-      note,
-      created_at: new Date().toISOString(),
-    };
-    // Save to Supabase
-    const { error } = await supabase.from("pos_sales").insert({
-      id: sale.id, cashier_id: sale.cashier_id, cashier_name: sale.cashier_name,
-      items: sale.items, subtotal: sale.subtotal, discount_amount: sale.discount,
-      tax: sale.tax, total: sale.total, payment_method: sale.payment_method,
-      cash_given: sale.cash_given, change_due: sale.change_due, note: sale.note,
-    });
-    if (error) { alert("Sale save failed: " + error.message); return; }
-
-    // Update stock
-    const stockUpdates = cart.filter(i => i.stock !== 999);
-    for (const item of stockUpdates) {
-      const newStock = Math.max(0, item.stock - item.qty);
-      await supabase.from("pos_products").update({ stock: newStock }).eq("id", item.id);
-      setProducts(ps => ps.map(p => p.id === item.id ? { ...p, stock: newStock } : p));
-    }
-
-    setReceipt({ ...sale, changeDisplay: method === "cash" ? change : null });
-    setCart([]); setDiscount(0); setCashGiven(""); setNote(""); setPayMode(null);
-    if (onSaleComplete) onSaleComplete(sale);
-  };
-
-  if (receipt) return (
-    <div style={{ display:"flex", alignItems:"center", justifyContent:"center", minHeight:"60vh" }}>
-      <div className="card" style={{ maxWidth:420, width:"100%", textAlign:"center" }}>
-        <div style={{ fontSize:52, marginBottom:8 }}>✅</div>
-        <div style={{ fontSize:22, fontWeight:900, marginBottom:4, color:"var(--green)" }}>Sale Complete!</div>
-        <div className="tm ts mb-16">Order #{receipt.id.slice(-6).toUpperCase()}</div>
-        <div style={{ background:"var(--bg3)", borderRadius:"var(--r)", padding:16, marginBottom:16, textAlign:"left" }}>
-          {receipt.items.map((it, i) => (
-            <div key={i} className="flex j-between ts mb-4">
-              <span>{it.name} × {it.qty}</span>
-              <span className="fb">{fmtCurrency(it.price * it.qty)}</span>
-            </div>
-          ))}
-          <div className="divider"/>
-          <div className="flex j-between ts mb-4"><span className="tm">Subtotal</span><span>{fmtCurrency(receipt.subtotal)}</span></div>
-          {receipt.discount > 0 && <div className="flex j-between ts mb-4 tr"><span>Discount</span><span>-{fmtCurrency(receipt.discount)}</span></div>}
-          <div className="flex j-between ts mb-4"><span className="tm">Tax (8%)</span><span>{fmtCurrency(receipt.tax)}</span></div>
-          <div className="flex j-between fb" style={{ fontSize:16 }}><span>Total</span><span className="tg">{fmtCurrency(receipt.total)}</span></div>
-          {receipt.changeDisplay !== null && receipt.changeDisplay !== undefined && (
-            <div className="flex j-between ts mt-8 tb fb"><span>Change</span><span>{fmtCurrency(receipt.changeDisplay)}</span></div>
-          )}
-        </div>
-        <div className="flex gap-8">
-          <button className="btn btn-primary" style={{ flex:1 }} onClick={() => setReceipt(null)}>New Sale</button>
-          <button className="btn btn-ghost btn-sm" onClick={() => window.print()}>🖨 Print</button>
-        </div>
-      </div>
-    </div>
-  );
-
-  return (
-    <div style={{ display:"grid", gridTemplateColumns:"1fr 360px", gap:18, height:"calc(100vh - 110px)" }}>
-      {/* LEFT: Product Grid */}
-      <div style={{ display:"flex", flexDirection:"column", gap:12, overflow:"hidden" }}>
-        <div className="flex gap-8 items-c" style={{ flexWrap:"wrap" }}>
-          <input className="fi" style={{ flex:1, minWidth:160 }} placeholder="🔍 Search products or SKU…" value={search} onChange={e => setSearch(e.target.value)}/>
-          <div className="flex gap-4" style={{ flexWrap:"wrap" }}>
-            {cats.map(c => (
-              <button key={c} onClick={() => setCatFilter(c)}
-                style={{ padding:"5px 12px", borderRadius:20, border:"1px solid var(--border)", background: catFilter===c ? "var(--blue)" : "var(--surface)", color: catFilter===c ? "white" : "var(--text2)", fontSize:12, fontWeight:600, cursor:"pointer", fontFamily:"'Outfit',sans-serif" }}>
-                {c}
-              </button>
-            ))}
-          </div>
-        </div>
-        <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill, minmax(140px, 1fr))", gap:10, overflowY:"auto", paddingBottom:8 }}>
-          {active.map(prod => (
-            <button key={prod.id} onClick={() => addToCart(prod)} disabled={prod.stock !== 999 && prod.stock <= 0}
-              style={{ background:"var(--bg2)", border:"1px solid var(--border)", borderRadius:14, padding:"14px 10px", cursor: prod.stock===999||prod.stock>0 ? "pointer":"not-allowed", transition:"all .15s", textAlign:"center", opacity: prod.stock!==999&&prod.stock<=0?0.4:1, fontFamily:"'Outfit',sans-serif" }}
-              onMouseOver={e=>{if(prod.stock===999||prod.stock>0){e.currentTarget.style.borderColor="var(--blue)";e.currentTarget.style.transform="translateY(-2px)";e.currentTarget.style.boxShadow="0 6px 20px var(--blue-g)";}}}
-              onMouseOut={e=>{e.currentTarget.style.borderColor="var(--border)";e.currentTarget.style.transform="none";e.currentTarget.style.boxShadow="none";}}>
-              <div style={{ fontSize:28, marginBottom:6 }}>{prod.emoji || "📦"}</div>
-              <div style={{ fontWeight:700, fontSize:13, lineHeight:1.2, marginBottom:4 }}>{prod.name}</div>
-              <div style={{ color:"var(--green)", fontWeight:900, fontSize:15 }}>{fmtCurrency(prod.price)}</div>
-              {prod.stock !== 999 && <div style={{ fontSize:10, color: prod.stock<5?"var(--red)":"var(--text2)", marginTop:3 }}>{prod.stock} left</div>}
-              <div style={{ fontSize:10, color:"var(--text3)", marginTop:2 }}>{prod.category}</div>
-            </button>
-          ))}
-          {!active.length && <div style={{ gridColumn:"1/-1", textAlign:"center", padding:40, color:"var(--text2)" }}>No products found</div>}
-        </div>
-      </div>
-
-      {/* RIGHT: Cart */}
-      <div style={{ display:"flex", flexDirection:"column", background:"var(--bg2)", border:"1px solid var(--border)", borderRadius:18, overflow:"hidden", boxShadow:"var(--shadow)" }}>
-        <div style={{ padding:"14px 16px", borderBottom:"1px solid var(--border)", display:"flex", justifyContent:"space-between", alignItems:"center" }}>
-          <div style={{ fontWeight:800, fontSize:15 }}>🛒 Cart ({cart.reduce((a,i)=>a+i.qty,0)} items)</div>
-          {cart.length > 0 && <button className="btn btn-danger btn-xs" onClick={() => setCart([])}>Clear</button>}
-        </div>
-
-        <div style={{ flex:1, overflowY:"auto", padding:"10px 14px" }}>
-          {!cart.length && <div style={{ textAlign:"center", padding:"40px 0", color:"var(--text2)", fontSize:13 }}>
-            <div style={{ fontSize:36, marginBottom:8 }}>🛒</div>
-            <div>Tap products to add them</div>
-          </div>}
-          {cart.map(item => (
-            <div key={item.id} style={{ display:"flex", alignItems:"center", gap:8, padding:"8px 0", borderBottom:"1px solid var(--border)" }}>
-              <div style={{ fontSize:20 }}>{item.emoji||"📦"}</div>
-              <div style={{ flex:1, minWidth:0 }}>
-                <div style={{ fontWeight:700, fontSize:13, whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis" }}>{item.name}</div>
-                <div style={{ color:"var(--green)", fontSize:12, fontWeight:600 }}>{fmtCurrency(item.price)} ea</div>
-              </div>
-              <div style={{ display:"flex", alignItems:"center", gap:4 }}>
-                <button onClick={() => updateQty(item.id, -1)} style={{ width:24, height:24, borderRadius:6, border:"1px solid var(--border)", background:"var(--surface)", cursor:"pointer", fontSize:14, display:"flex", alignItems:"center", justifyContent:"center", color:"var(--text)", fontFamily:"'Outfit',sans-serif" }}>−</button>
-                <span style={{ width:22, textAlign:"center", fontWeight:700, fontSize:13 }}>{item.qty}</span>
-                <button onClick={() => updateQty(item.id, 1)} style={{ width:24, height:24, borderRadius:6, border:"1px solid var(--border)", background:"var(--surface)", cursor:"pointer", fontSize:14, display:"flex", alignItems:"center", justifyContent:"center", color:"var(--text)", fontFamily:"'Outfit',sans-serif" }}>+</button>
-              </div>
-              <div style={{ fontWeight:700, fontSize:13, minWidth:52, textAlign:"right", color:"var(--blue)" }}>{fmtCurrency(item.price*item.qty)}</div>
-              <button onClick={() => removeItem(item.id)} style={{ background:"none", border:"none", cursor:"pointer", color:"var(--text2)", padding:2 }}><Icon name="x" size={13}/></button>
-            </div>
-          ))}
-        </div>
-
-        {/* Totals + payment */}
-        <div style={{ padding:"12px 14px", borderTop:"1px solid var(--border)", background:"var(--bg3)" }}>
-          <div className="flex j-between ts mb-6"><span className="tm">Subtotal</span><span>{fmtCurrency(subtotal)}</span></div>
-          <div className="flex gap-8 items-c mb-6">
-            <span className="tm ts" style={{ flex:1 }}>Discount %</span>
-            <input type="number" min="0" max="100" className="fi" style={{ width:70, padding:"4px 8px", fontSize:13, marginBottom:0 }} value={discount} onChange={e => setDiscount(e.target.value)}/>
-            {discAmt > 0 && <span className="tr ts">-{fmtCurrency(discAmt)}</span>}
-          </div>
-          <div className="flex j-between ts mb-6"><span className="tm">Tax (8%)</span><span>{fmtCurrency(tax)}</span></div>
-          <div className="flex j-between fb mb-12" style={{ fontSize:18, borderTop:"1px solid var(--border)", paddingTop:10, marginTop:4 }}>
-            <span>Total</span><span className="tg">{fmtCurrency(total)}</span>
-          </div>
-
-          <div className="fg mb-8"><label className="fl">Order Note</label><input className="fi" placeholder="Optional note…" value={note} onChange={e=>setNote(e.target.value)}/></div>
-
-          {!payMode && (
-            <div className="flex gap-8">
-              <button className="btn btn-success" style={{ flex:1 }} disabled={!cart.length} onClick={() => { completeSale("card"); }}>
-                💳 Card
-              </button>
-              <button className="btn btn-amber" style={{ flex:1 }} disabled={!cart.length} onClick={() => setPayMode("cash")}>
-                💵 Cash
-              </button>
-            </div>
-          )}
-
-          {payMode === "cash" && (
-            <div>
-              <div className="fg"><label className="fl">Cash Received</label>
-                <input className="fi" type="number" step="0.01" placeholder={`Min $${total.toFixed(2)}`} value={cashGiven} onChange={e=>setCashGiven(e.target.value)} autoFocus/>
-              </div>
-              {Number(cashGiven) > 0 && (
-                <div className={`alert ${change >= 0 ? "a-success" : "a-error"} mb-8`}>
-                  {change >= 0 ? `✓ Change due: ${fmtCurrency(change)}` : `⚠ Need ${fmtCurrency(-change)} more`}
-                </div>
-              )}
-              <div className="flex gap-8">
-                <button className="btn btn-success" style={{ flex:1 }} disabled={Number(cashGiven) < total} onClick={() => completeSale("cash")}>
-                  ✓ Complete Sale
-                </button>
-                <button className="btn btn-ghost" onClick={() => { setPayMode(null); setCashGiven(""); }}>Back</button>
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// ─── POS: PRODUCT MANAGEMENT ──────────────────────────────────────────────────
-function POSProducts({ products, setProducts }) {
-  const [showAdd, setShowAdd] = useState(false);
-  const [editProd, setEditProd] = useState(null);
-  const [search, setSearch] = useState("");
-  const [form, setForm] = useState({ name:"", category:"", price:"", cost:"", stock:"", sku:"", emoji:"📦", active:true });
-  const [saving, setSaving] = useState(false);
-
-  const filtered = products.filter(p =>
-    p.name.toLowerCase().includes(search.toLowerCase()) ||
-    p.category?.toLowerCase().includes(search.toLowerCase()) ||
-    p.sku?.toLowerCase().includes(search.toLowerCase())
-  );
-
-  const openAdd = () => { setForm({ name:"", category:"", price:"", cost:"", stock:"", sku:"", emoji:"📦", active:true }); setEditProd(null); setShowAdd(true); };
-  const openEdit = (p) => { setForm({ ...p }); setEditProd(p); setShowAdd(true); };
-
-  const save = async () => {
-    if (!form.name || !form.price) return;
-    setSaving(true);
-    const payload = { name:form.name, category:form.category||"General", price:Number(form.price), cost:Number(form.cost||0), stock:Number(form.stock||999), sku:form.sku||"", emoji:form.emoji||"📦", active:form.active!==false };
-    if (editProd) {
-      const { error } = await supabase.from("pos_products").update(payload).eq("id", editProd.id);
-      if (error) { alert("Update failed: " + error.message); setSaving(false); return; }
-      setProducts(ps => ps.map(p => p.id === editProd.id ? { ...p, ...payload } : p));
-    } else {
-      const newId = `P${Date.now()}`;
-      const { error } = await supabase.from("pos_products").insert({ id:newId, ...payload });
-      if (error) { alert("Add failed: " + error.message); setSaving(false); return; }
-      setProducts(ps => [...ps, { id:newId, ...payload }]);
-    }
-    setSaving(false); setShowAdd(false);
-  };
-
-  const del = async (id) => {
-    if (!window.confirm("Delete this product?")) return;
-    await supabase.from("pos_products").delete().eq("id", id);
-    setProducts(ps => ps.filter(p => p.id !== id));
-  };
-
-  const toggle = async (id, active) => {
-    await supabase.from("pos_products").update({ active }).eq("id", id);
-    setProducts(ps => ps.map(p => p.id === id ? { ...p, active } : p));
-  };
-
-  return (
-    <div>
-      <div className="arow">
-        <input className="fi" style={{ maxWidth:260 }} placeholder="Search products…" value={search} onChange={e=>setSearch(e.target.value)}/>
-        <button className="btn btn-primary" onClick={openAdd}><Icon name="plus" size={14}/>Add Product</button>
-      </div>
-      <div className="tbl-wrap">
-        <table>
-          <thead><tr><th>Product</th><th>Category</th><th>Price</th><th>Cost</th><th>Margin</th><th>Stock</th><th>Status</th><th>Actions</th></tr></thead>
-          <tbody>
-            {filtered.map((p, i) => {
-              const margin = p.price > 0 ? ((p.price - p.cost) / p.price * 100) : 0;
-              return (
-                <tr key={i}>
-                  <td><div className="flex items-c gap-8"><span style={{fontSize:20}}>{p.emoji||"📦"}</span><div><div className="fb">{p.name}</div><div className="txs tm fmono">{p.sku}</div></div></div></td>
-                  <td><span className="badge b-blue" style={{fontSize:10}}>{p.category}</span></td>
-                  <td className="tg fb">{fmtCurrency(p.price)}</td>
-                  <td className="tm">{fmtCurrency(p.cost)}</td>
-                  <td><span style={{ color: margin>50?"var(--green)":margin>25?"var(--amber)":"var(--red)", fontWeight:700 }}>{margin.toFixed(0)}%</span></td>
-                  <td><span style={{ color: p.stock===999?"var(--text2)":p.stock<5?"var(--red)":p.stock<15?"var(--amber)":"var(--green)", fontWeight:700 }}>{p.stock===999?"∞":p.stock}</span></td>
-                  <td>
-                    <button onClick={() => toggle(p.id, !p.active)} className={`badge ${p.active?"b-green":"b-red"}`} style={{cursor:"pointer",border:"none",background:p.active?"var(--green-g)":"var(--red-g)"}}>
-                      {p.active?"Active":"Inactive"}
-                    </button>
-                  </td>
-                  <td>
-                    <div className="flex gap-6">
-                      <button className="icon-btn tb" onClick={() => openEdit(p)}><Icon name="edit" size={14}/></button>
-                      <button className="icon-btn tr" onClick={() => del(p.id)}><Icon name="trash" size={14}/></button>
-                    </div>
-                  </td>
-                </tr>
-              );
-            })}
-            {!filtered.length && <tr><td colSpan={8} style={{textAlign:"center",padding:32,color:"var(--text2)"}}>No products found</td></tr>}
-          </tbody>
-        </table>
-      </div>
-
-      {showAdd && (
-        <div className="overlay" onClick={e=>e.target===e.currentTarget&&setShowAdd(false)}>
-          <div className="modal">
-            <div className="modal-title"><span style={{fontSize:22}}>{form.emoji||"📦"}</span>{editProd ? "Edit Product" : "New Product"}</div>
-            <div className="g2" style={{gap:12}}>
-              <div className="fg"><label className="fl">Product Name</label><input className="fi" value={form.name} onChange={e=>setForm({...form,name:e.target.value})}/></div>
-              <div className="fg"><label className="fl">Emoji Icon</label><input className="fi" value={form.emoji} onChange={e=>setForm({...form,emoji:e.target.value})} placeholder="📦"/></div>
-            </div>
-            <div className="g2" style={{gap:12}}>
-              <div className="fg"><label className="fl">Category</label><input className="fi" value={form.category} onChange={e=>setForm({...form,category:e.target.value})} placeholder="Coffee, Bakery…"/></div>
-              <div className="fg"><label className="fl">SKU</label><input className="fi" value={form.sku} onChange={e=>setForm({...form,sku:e.target.value})} placeholder="ABC001"/></div>
-            </div>
-            <div className="g2" style={{gap:12}}>
-              <div className="fg"><label className="fl">Sale Price ($)</label><input className="fi" type="number" step="0.01" value={form.price} onChange={e=>setForm({...form,price:e.target.value})}/></div>
-              <div className="fg"><label className="fl">Cost ($)</label><input className="fi" type="number" step="0.01" value={form.cost} onChange={e=>setForm({...form,cost:e.target.value})}/></div>
-            </div>
-            <div className="fg"><label className="fl">Stock (leave blank for unlimited)</label><input className="fi" type="number" value={form.stock===999?"":form.stock} onChange={e=>setForm({...form,stock:e.target.value===""?999:Number(e.target.value)})} placeholder="Leave blank = unlimited"/></div>
-            {form.price>0&&form.cost>0&&<div className="alert a-info mb-8">Margin: {((Number(form.price)-Number(form.cost))/Number(form.price)*100).toFixed(1)}% · Profit: {fmtCurrency(form.price-form.cost)} per unit</div>}
-            <div className="flex gap-8">
-              <button className="btn btn-primary" style={{flex:1}} onClick={save} disabled={saving}>{saving?"Saving…":editProd?"Update Product":"Add Product"}</button>
-              <button className="btn btn-ghost" onClick={()=>setShowAdd(false)}>Cancel</button>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
-
-// ─── POS: SALES HISTORY ───────────────────────────────────────────────────────
-function POSSalesHistory({ sales }) {
-  const [viewSale, setViewSale] = useState(null);
-  const [dateFilter, setDateFilter] = useState("");
-
-  const filtered = sales.filter(s => !dateFilter || s.created_at?.slice(0,10) === dateFilter);
-  const sorted = [...filtered].sort((a,b) => (b.created_at||"").localeCompare(a.created_at||""));
-
-  return (
-    <div>
-      <div className="arow">
-        <div className="flex gap-8 items-c">
-          <label className="fl" style={{marginBottom:0}}>Filter by date:</label>
-          <input type="date" className="fi" style={{width:"auto"}} value={dateFilter} onChange={e=>setDateFilter(e.target.value)}/>
-          {dateFilter && <button className="btn btn-ghost btn-sm" onClick={()=>setDateFilter("")}>Clear</button>}
-        </div>
-        <div className="ts tm">{sorted.length} transaction{sorted.length!==1?"s":""}</div>
-      </div>
-      <div className="tbl-wrap">
-        <table>
-          <thead><tr><th>Order #</th><th>Time</th><th>Cashier</th><th>Items</th><th>Subtotal</th><th>Tax</th><th>Total</th><th>Payment</th><th></th></tr></thead>
-          <tbody>
-            {sorted.map((s, i) => (
-              <tr key={i}>
-                <td className="fb fmono" style={{fontSize:12}}>#{(s.id||"").slice(-6).toUpperCase()}</td>
-                <td className="ts tm">{s.created_at ? new Date(s.created_at).toLocaleString() : "—"}</td>
-                <td>{s.cashier_name||"—"}</td>
-                <td className="ts">{(s.items||[]).length} item{(s.items||[]).length!==1?"s":""}</td>
-                <td>{fmtCurrency(s.subtotal)}</td>
-                <td className="tm">{fmtCurrency(s.tax)}</td>
-                <td className="tg fb">{fmtCurrency(s.total)}</td>
-                <td><span className={`badge ${s.payment_method==="card"?"b-blue":"b-amber"}`}>{s.payment_method==="card"?"💳 Card":"💵 Cash"}</span></td>
-                <td><button className="btn btn-ghost btn-xs" onClick={()=>setViewSale(s)}>View</button></td>
-              </tr>
-            ))}
-            {!sorted.length&&<tr><td colSpan={9} style={{textAlign:"center",padding:32,color:"var(--text2)"}}>No sales found</td></tr>}
-          </tbody>
-        </table>
-      </div>
-
-      {viewSale && (
-        <div className="overlay" onClick={e=>e.target===e.currentTarget&&setViewSale(null)}>
-          <div className="modal">
-            <div className="modal-title">Receipt — #{(viewSale.id||"").slice(-6).toUpperCase()}</div>
-            <div className="ts tm mb-16">{viewSale.created_at ? new Date(viewSale.created_at).toLocaleString() : ""} · {viewSale.cashier_name}</div>
-            {(viewSale.items||[]).map((it,i)=>(
-              <div key={i} className="flex j-between ts mb-6"><span>{it.name} × {it.qty}</span><span className="fb">{fmtCurrency(it.price*it.qty)}</span></div>
-            ))}
-            <div className="divider"/>
-            <div className="flex j-between ts mb-4"><span className="tm">Subtotal</span><span>{fmtCurrency(viewSale.subtotal)}</span></div>
-            {viewSale.discount_amount>0&&<div className="flex j-between ts mb-4 tr"><span>Discount</span><span>-{fmtCurrency(viewSale.discount_amount)}</span></div>}
-            <div className="flex j-between ts mb-4"><span className="tm">Tax</span><span>{fmtCurrency(viewSale.tax)}</span></div>
-            <div className="flex j-between fb mb-16" style={{fontSize:16}}><span>Total</span><span className="tg">{fmtCurrency(viewSale.total)}</span></div>
-            {viewSale.note&&<div className="ts tm mb-12">Note: {viewSale.note}</div>}
-            <button className="btn btn-ghost w-full" onClick={()=>setViewSale(null)}>Close</button>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
-
-// ─── POS: ANALYTICS DASHBOARD ─────────────────────────────────────────────────
-function POSAnalytics({ sales, products }) {
-  const now = new Date();
-  const todayStr = now.toISOString().slice(0,10);
-  const thisMonth = now.toISOString().slice(0,7);
-
-  const todaySales = sales.filter(s => s.created_at?.slice(0,10) === todayStr);
-  const monthSales = sales.filter(s => s.created_at?.slice(0,7) === thisMonth);
-
-  const todayRev  = todaySales.reduce((a,s) => a + Number(s.total||0), 0);
-  const monthRev  = monthSales.reduce((a,s) => a + Number(s.total||0), 0);
-  const totalRev  = sales.reduce((a,s) => a + Number(s.total||0), 0);
-  const avgTicket = sales.length ? totalRev / sales.length : 0;
-
-  // Best sellers
-  const itemCounts = {};
-  sales.forEach(s => (s.items||[]).forEach(it => {
-    itemCounts[it.name] = (itemCounts[it.name]||0) + it.qty;
-  }));
-  const topItems = Object.entries(itemCounts).sort((a,b)=>b[1]-a[1]).slice(0,5);
-
-  // Revenue by category
-  const catRev = {};
-  sales.forEach(s => (s.items||[]).forEach(it => {
-    catRev[it.category||"Other"] = (catRev[it.category||"Other"]||0) + it.price * it.qty;
-  }));
-  const topCats = Object.entries(catRev).sort((a,b)=>b[1]-a[1]);
-
-  // Payment split
-  const cardCount = sales.filter(s=>s.payment_method==="card").length;
-  const cashCount = sales.filter(s=>s.payment_method==="cash").length;
-
-  // Low stock
-  const lowStock = products.filter(p => p.stock !== 999 && p.stock < 10 && p.active);
-
-  return (
-    <div>
-      <div className="stat-grid mb-20">
-        <div className="stat-card"><div className="stat-label">Today's Revenue</div><div className="stat-val green">{fmtCurrency(todayRev)}</div><div className="txs tm mt-8">{todaySales.length} transactions</div></div>
-        <div className="stat-card"><div className="stat-label">This Month</div><div className="stat-val blue">{fmtCurrency(monthRev)}</div><div className="txs tm mt-8">{monthSales.length} transactions</div></div>
-        <div className="stat-card"><div className="stat-label">All-Time Revenue</div><div className="stat-val violet">{fmtCurrency(totalRev)}</div><div className="txs tm mt-8">{sales.length} total sales</div></div>
-        <div className="stat-card"><div className="stat-label">Avg Ticket</div><div className="stat-val amber">{fmtCurrency(avgTicket)}</div><div className="txs tm mt-8">per transaction</div></div>
-      </div>
-
-      <div className="g2 mb-18">
-        <div className="card">
-          <div className="card-title mb-16">🏆 Top Selling Items</div>
-          {!topItems.length && <div className="tm ts">No sales data yet</div>}
-          {topItems.map(([name, qty], i) => (
-            <div key={i} className="flex j-between items-c mb-10">
-              <div className="flex items-c gap-10">
-                <div style={{ width:24, height:24, borderRadius:6, background:"var(--blue-g)", color:"var(--blue)", display:"flex", alignItems:"center", justifyContent:"center", fontSize:11, fontWeight:900 }}>{i+1}</div>
-                <span className="fb ts">{name}</span>
-              </div>
-              <div className="flex items-c gap-10">
-                <div style={{ width:80, height:6, background:"var(--bg3)", borderRadius:3, overflow:"hidden" }}>
-                  <div style={{ height:"100%", background:"var(--blue)", width:`${(qty/(topItems[0]?.[1]||1))*100}%`, borderRadius:3 }}/>
-                </div>
-                <span className="tb fb ts">{qty} sold</span>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        <div className="card">
-          <div className="card-title mb-16">📊 Revenue by Category</div>
-          {!topCats.length && <div className="tm ts">No sales data yet</div>}
-          {topCats.map(([cat, rev], i) => (
-            <div key={i} className="flex j-between items-c mb-10">
-              <span className="fb ts">{cat}</span>
-              <div className="flex items-c gap-10">
-                <div style={{ width:80, height:6, background:"var(--bg3)", borderRadius:3, overflow:"hidden" }}>
-                  <div style={{ height:"100%", background:"var(--green)", width:`${(rev/(topCats[0]?.[1]||1))*100}%`, borderRadius:3 }}/>
-                </div>
-                <span className="tg fb ts">{fmtCurrency(rev)}</span>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div className="g2">
-        <div className="card">
-          <div className="card-title mb-16">💳 Payment Methods</div>
-          <div style={{ display:"flex", gap:12, marginBottom:16 }}>
-            <div style={{ flex:1, padding:16, background:"var(--blue-g)", borderRadius:12, textAlign:"center" }}>
-              <div style={{ fontSize:28 }}>💳</div>
-              <div style={{ fontWeight:900, fontSize:22, color:"var(--blue)" }}>{cardCount}</div>
-              <div className="ts tm">Card Payments</div>
-              <div className="txs tm">{sales.length ? Math.round(cardCount/sales.length*100) : 0}%</div>
-            </div>
-            <div style={{ flex:1, padding:16, background:"var(--amber-g)", borderRadius:12, textAlign:"center" }}>
-              <div style={{ fontSize:28 }}>💵</div>
-              <div style={{ fontWeight:900, fontSize:22, color:"var(--amber)" }}>{cashCount}</div>
-              <div className="ts tm">Cash Payments</div>
-              <div className="txs tm">{sales.length ? Math.round(cashCount/sales.length*100) : 0}%</div>
-            </div>
-          </div>
-        </div>
-
-        <div className="card">
-          <div className="card-title mb-12">⚠️ Low Stock Alert</div>
-          {!lowStock.length && <div className="alert a-success">All products are well stocked!</div>}
-          {lowStock.map((p, i) => (
-            <div key={i} className="flex j-between items-c mb-8 p-10" style={{ background:"var(--red-g)", borderRadius:8, padding:"8px 12px" }}>
-              <div className="flex items-c gap-8"><span>{p.emoji}</span><span className="fb ts">{p.name}</span></div>
-              <span style={{ color:"var(--red)", fontWeight:700, fontSize:13 }}>{p.stock} left</span>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// ─── POS APP SHELL ─────────────────────────────────────────────────────────────
-function POSApp({ cashier, onBack, dark, setDark }) {
-  const [tab, setTab] = useState("register");
-  const [products, setProducts] = useState([]);
-  const [sales, setSales] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  const loadPOS = useCallback(async () => {
-    const [pr, sr] = await Promise.all([
-      supabase.from("pos_products").select("*").order("name"),
-      supabase.from("pos_sales").select("*").order("created_at", { ascending:false }).limit(500),
-    ]);
-    if (pr.data) setProducts(pr.data.length ? pr.data : SAMPLE_PRODUCTS);
-    if (sr.data) setSales(sr.data);
-    if (!pr.data?.length) {
-      // seed sample products
-      await supabase.from("pos_products").insert(SAMPLE_PRODUCTS.map(p=>({
-        id:p.id,name:p.name,category:p.category,price:p.price,cost:p.cost,stock:p.stock,sku:p.sku,emoji:p.emoji,active:p.active
-      })));
-    }
-    setLoading(false);
-  }, []);
-
-  useEffect(() => { loadPOS(); }, [loadPOS]);
-
-  const onSaleComplete = (sale) => {
-    setSales(s => [{ ...sale, discount_amount: sale.discount }, ...s]);
-  };
-
-  const posTabs = [
-    { id:"register",  label:"Register",  icon:"dollar" },
-    { id:"products",  label:"Products",  icon:"book" },
-    { id:"sales",     label:"Sales Log", icon:"file" },
-    { id:"analytics", label:"Analytics", icon:"home" },
-  ];
-
-  return (
-    <div className="shell">
-      <nav className="sidebar">
-        <div className="sidebar-logo">
-          <Logo size={38}/>
-          <div><div className="logo-name">WorkForce POS</div><div className="logo-sub">Point of Sale</div></div>
-        </div>
-        <div className="sidebar-nav">
-          <div className="nav-section">Point of Sale</div>
-          {posTabs.map(t => (
-            <button key={t.id} className={`nav-item ${tab===t.id?"active":""}`} onClick={() => setTab(t.id)}>
-              <Icon name={t.icon} size={15}/><span>{t.label}</span>
-            </button>
-          ))}
-          <div className="nav-section">Navigation</div>
-          <button className="nav-item" onClick={onBack}><Icon name="home" size={15}/><span>Back to HR</span></button>
-        </div>
-        <div className="sidebar-bottom">
-          <div className="user-chip">
-            <div className="avatar" style={{ background:"linear-gradient(135deg,var(--green),var(--cyan))" }}>{initials(cashier?.name||"AD")}</div>
-            <div className="user-info"><div className="user-name">{cashier?.name||"Administrator"}</div><div className="user-role">Cashier</div></div>
-          </div>
-        </div>
-      </nav>
-      <main className="main">
-        <div className="topbar">
-          <div className="topbar-title">{posTabs.find(t=>t.id===tab)?.label}</div>
-          <span className="badge b-green">POS</span>
-          <button className="btn btn-ghost btn-sm" onClick={loadPOS}><Icon name="gps" size={13}/>Refresh</button>
-          <ThemeBtn dark={dark} setDark={setDark}/>
-          <button className="btn btn-ghost btn-sm" onClick={onBack}><Icon name="logout" size={13}/>HR Portal</button>
-        </div>
-        <div className="page">
-          {loading ? (
-            <div style={{ textAlign:"center", padding:60, color:"var(--text2)" }}>Loading POS…</div>
-          ) : (
-            <>
-              {tab==="register"  && <POSRegister products={products} setProducts={setProducts} cashier={cashier} onSaleComplete={onSaleComplete}/>}
-              {tab==="products"  && <POSProducts products={products} setProducts={setProducts}/>}
-              {tab==="sales"     && <POSSalesHistory sales={sales}/>}
-              {tab==="analytics" && <POSAnalytics sales={sales} products={products}/>}
-            </>
-          )}
-        </div>
-      </main>
-    </div>
-  );
-}
 
 // ─── ROOT ──────────────────────────────────────────────────────────────────────
 export default function App() {
@@ -2135,7 +1518,6 @@ export default function App() {
   const [fatal,setFatal]=useState("");
   const [dark,setDark]=useState(true);
   const [officeLocation,setOfficeLocation]=useState(null);
-  const [posMode,setPosMode]=useState(false);
 
   useEffect(()=>{
     const el=document.createElement("style");el.textContent=getCSS(dark);
@@ -2194,10 +1576,8 @@ export default function App() {
     </div>
   );
 
-  if(posMode)return <POSApp cashier={session?.type==="employee"?session.emp:null} onBack={()=>setPosMode(false)} dark={dark} setDark={setDark}/>;
   if(showPunch)return <PunchStation employees={employees} setEmployees={setEmployees} onBack={()=>setShowPunch(false)} reloadAll={reloadAll} officeLocation={officeLocation}/>;
   if(!session)return <Login employees={employees} onLogin={setSession} onPunch={()=>setShowPunch(true)} dark={dark} setDark={setDark}/>;
-  // EmployeeApp needs access to setPosMode — handled via prop threading
-  if(session.type==="admin")return <AdminApp employees={employees} setEmployees={setEmployees} onLogout={()=>setSession(null)} reloadAll={reloadAll} officeLocation={officeLocation} setOfficeLocation={setOfficeLocation} dark={dark} setDark={setDark} onOpenPOS={()=>setPosMode(true)}/>;
-  return <EmployeeApp emp={session.emp} employees={employees} setEmployees={setEmployees} onLogout={()=>setSession(null)} reloadAll={reloadAll} dark={dark} setDark={setDark} onOpenPOS={()=>setPosMode(true)}/>;
+  if(session.type==="admin")return <AdminApp employees={employees} setEmployees={setEmployees} onLogout={()=>setSession(null)} reloadAll={reloadAll} officeLocation={officeLocation} setOfficeLocation={setOfficeLocation} dark={dark} setDark={setDark}/>;
+  return <EmployeeApp emp={session.emp} employees={employees} setEmployees={setEmployees} onLogout={()=>setSession(null)} reloadAll={reloadAll} dark={dark} setDark={setDark}/>;
 }
