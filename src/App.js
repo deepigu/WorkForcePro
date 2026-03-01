@@ -1228,7 +1228,7 @@ function ThemeBtn({dark,setDark}) {
 function EmployeeApp({emp,employees,setEmployees,onLogout,reloadAll,dark,setDark,onOpenPOS}) {
   const [tab,setTab]=useState("home");
   const [showPwd,setShowPwd]=useState(false);
-  const [showPOS,setShowPOS]=useState(false);
+ 
   const cur=employees.find(e=>e.id===emp.id)||emp;
 
   // Employee's own tabs
@@ -1376,7 +1376,7 @@ function PunchStation({employees,setEmployees,onBack,reloadAll,officeLocation}) 
   const [err,setErr]=useState("");
   const [punched,setPunched]=useState(null);
   const {pos,status,get}=useGPS();
-  useEffect(()=>{if(officeLocation)get();},[officeLocation]);
+  useEffect(()=>{if(officeLocation)get();},[officeLocation]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const inRange=()=>{if(!officeLocation)return true;if(!pos)return false;return distM(pos.lat,pos.lng,officeLocation.lat,officeLocation.lng)<=officeLocation.radius;};
 
